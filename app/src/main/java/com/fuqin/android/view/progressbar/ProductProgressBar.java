@@ -27,7 +27,7 @@ import com.fuqin.android.view.R;
 
 public class ProductProgressBar extends View {
     private ValueAnimator alphaAnimator;
-    private long alphaDuration = 3000L;
+    private long alphaDuration = 5000L;
     private long changeDuration = 1500L;
     private ValueAnimator changeWidthAnimator;
     private float currentProgress;

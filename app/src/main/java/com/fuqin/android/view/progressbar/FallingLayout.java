@@ -23,15 +23,16 @@ import java.util.Random;
  */
 
 public class FallingLayout extends RelativeLayout {
-    private int drawableId = R.mipmap.money;
-    private int[] bombImgId = {R.mipmap.bong_1, R.mipmap.bong_2, R.mipmap.bong_3, R.mipmap.bong_4, R.mipmap.bong_5};
-    private FallingHandler mFallingHandler;
-    private int mHeight;
-    private int mWidth;
-    private Random random = new Random();
-    private long imgDuration = 2500;
-    private float imgRotation = 30;
-    private float imgScale = 0.5f;
+    private int drawableId = R.mipmap.money; //红包的imgResId
+    private int[] bombImgId = {R.mipmap.bong0001, R.mipmap.bong0002, R.mipmap.bong0003
+            , R.mipmap.bong0004, R.mipmap.bong0005, R.mipmap.bong0006, R.mipmap.bong0007, R.mipmap.bong0008
+            , R.mipmap.bong0009, R.mipmap.bong0010, R.mipmap.bong0011}; //炸弹的imgResId
+    private FallingHandler mFallingHandler; //添加红包的handler
+    private int mHeight, mWidth;
+    private Random random = new Random(); //随机数
+    private long imgDuration = 2500; //红包下落时间
+    private float imgRotation = 30; //红包倾斜角度
+    private float imgScale = 0.5f; //红包的缩放大小
 
     public FallingLayout(Context paramContext) {
         this(paramContext, null);
@@ -59,31 +60,32 @@ public class FallingLayout extends RelativeLayout {
             valueAnimator.cancel();
             float x = imageView.getX();
             float y = imageView.getY();
-            if (random.nextInt(2) == 1) {
-                showBombView(x, y);
-            } else {
-                showRewardView(x, y);
-            }
+            showRewardView(x, y);
+//            if (random.nextInt(2) == 1) {
+//                showBombView(x, y);
+//            } else {
+//                showRewardView(x, y);
+//            }
         });
     }
 
     private void showRewardView(float x, float y) {
         TextView textView = new TextView(getContext());
         addView(textView);
-        textView.setTextSize(20);
+        textView.setTextSize(18);
         textView.setTextColor(Color.YELLOW);
-        textView.setText("你很皮+1");
+        textView.setText("+666");
         textView.setX(x);
         showRewardAnimation(textView, y);
     }
 
     private void showRewardAnimation(TextView textView, float y) {
-        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1);
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0.5f, 1);
         valueAnimator.setDuration(2000);
         valueAnimator.addUpdateListener(animation -> {
             float value = (float) animation.getAnimatedValue();
             textView.setAlpha(value);
-            textView.setY(y - mHeight / 5 * value);
+            textView.setY(y - mHeight / 10 * value);
         });
         valueAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
@@ -113,7 +115,7 @@ public class FallingLayout extends RelativeLayout {
         valueAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                postDelayed(() -> removeView(imageView), 340);
+                postDelayed(() -> removeView(imageView), 300);
             }
         });
         valueAnimator.start();

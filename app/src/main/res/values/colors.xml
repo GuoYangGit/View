@@ -12,4 +12,6 @@
     <color name="yellow">#F9E4B9</color>
     <color name="ACACAC">#ACACAC</color>
     <color name="load_fail_textcolor">#F6E5B6</color>
+    <color name="startColor">#CE3424</color>
+    <color name="centerColor">#F5483F</color>
 </resources>

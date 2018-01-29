@@ -2,6 +2,8 @@ package com.fuqin.android.view.progressbar;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -30,6 +32,18 @@ public class ProgressView extends View {
 
     private int mWidth;
     private int mHeight;
+
+    private int[] redImgId = {R.mipmap.hongbao0001, R.mipmap.hongbao0002, R.mipmap.hongbao0003
+            , R.mipmap.hongbao0004, R.mipmap.hongbao0005, R.mipmap.hongbao0006, R.mipmap.hongbao0007
+            , R.mipmap.hongbao0008, R.mipmap.hongbao0009, R.mipmap.hongbao0010, R.mipmap.hongbao0011
+            , R.mipmap.hongbao0012, R.mipmap.hongbao0013, R.mipmap.hongbao0014, R.mipmap.hongbao0015
+            , R.mipmap.hongbao0016, R.mipmap.hongbao0017, R.mipmap.hongbao0018, R.mipmap.hongbao0019
+            , R.mipmap.hongbao0020, R.mipmap.hongbao0021, R.mipmap.hongbao0022, R.mipmap.hongbao0023
+            , R.mipmap.hongbao0024, R.mipmap.hongbao0025, R.mipmap.hongbao0026, R.mipmap.hongbao0027
+            , R.mipmap.hongbao0028, R.mipmap.hongbao0029}; //炸弹的imgResId
+    private int index = 0;
+    private Paint mRedPaint;
+    private long currentTime;
 
     private float mProgress;
     private float textHeight;
@@ -68,6 +82,12 @@ public class ProgressView extends View {
         init();
         initPaint();
         initTextPaint();
+        initRedPaint();
+    }
+
+    private void initRedPaint() {
+        mRedPaint = new Paint();
+        mRedPaint.setAntiAlias(true);
     }
 
     /**
@@ -97,7 +117,6 @@ public class ProgressView extends View {
         textPaint.setColor(progressColor);
         textPaint.setTextAlign(Paint.Align.CENTER);
         textPaint.setAntiAlias(true);
-        textWidth = textPaint.measureText(textString);
     }
 
 
@@ -134,6 +153,14 @@ public class ProgressView extends View {
         drawBgProgress(canvas);
         //进度条
         drawProgress(canvas);
+
+        drawRedPackage(canvas);
+    }
+
+    private void drawRedPackage(Canvas canvas) {
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), redImgId[index]);
+        if (progressRectF.right - getPaddingLeft() - bitmap.getWidth() < 0) return;
+        canvas.drawBitmap(bitmap, progressRectF.right - bitmap.getWidth(), progressRectF.bottom - bitmap.getHeight(), mRedPaint);
     }
 
     private void drawBgProgress(Canvas canvas) {
@@ -186,6 +213,11 @@ public class ProgressView extends View {
             if (progressListener != null) {
                 progressListener.currentProgressListener(value);
             }
+            if (valueAnimator.getCurrentPlayTime() - currentTime >= 40) {
+                currentTime = valueAnimator.getCurrentPlayTime();
+                index++;
+                if (index == 29) index = 0;
+            }
             //移动百分比提示框，只有当前进度到提示框中间位置之后开始移动，当进度框移动到最右边的时候停止移动，但是进度条还可以继续移动
             if (currentProgress >= textWidth && currentProgress <= mWidth) {
                 moveDis = currentProgress - textWidth;
@@ -219,7 +251,11 @@ public class ProgressView extends View {
         mProgress = progress;
         textString = "0%";
         currentProgress = 0;
+        animationValue = 0;
         moveDis = 0;
+        index = 0;
+        currentTime = 0;
+        textWidth = textPaint.measureText(textString);
         initAnimation();
         return this;
     }
