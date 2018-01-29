@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/money_backgroup"
+    android:orientation="vertical"
+    tools:context="com.fuqin.android.view.progressbar.ProgressBarActivity">
+
+    <com.fuqin.android.view.progressbar.ProductProgressBar
+        android:id="@+id/progressbar"
+        android:layout_width="20dp"
+        android:layout_height="match_parent"
+        android:padding="5dp"/>
+
+    <com.fuqin.android.view.progressbar.FallingLayout
+        android:id="@+id/fallinglayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <LinearLayout
+        android:id="@+id/loading_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="一大波红包雨即将来袭"
+            android:textColor="@color/yellow"/>
+
+        <com.fuqin.android.view.progressbar.ProgressView
+            android:id="@+id/progressview"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:padding="20dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/load_fail_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:visibility="invisible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="红包被堵截"
+            android:textColor="@color/yellow"/>
+
+        <Button
+            android:id="@+id/load_fail_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="67dp"
+            android:background="@mipmap/load_fail"
+            android:padding="24dp"
+            android:text="重新召唤红包雨"
+            android:textColor="@color/load_fail_textcolor"/>
+    </LinearLayout>
+
+    <com.fuqin.android.view.progressbar.DownTimeLayout
+        android:id="@+id/downTimeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"/>
+</RelativeLayout>

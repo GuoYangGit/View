@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ArcView">
+        <attr name="arcview_borderWidth" format="dimension"/>
+        <attr name="arcview_norColor" format="color"/>
+        <attr name="arcview_text" format="string"/>
+        <attr name="arcview_textColor" format="color"/>
+        <attr name="arcview_textSize" format="dimension"/>
+    </declare-styleable>
+    <declare-styleable name="WaveView">
+        <attr name="backgroudColor" format="color"/>
+        <attr name="progressColor" format="color"/>
+        <attr name="max" format="integer"/>
+        <attr name="progress" format="integer"/>
+    </declare-styleable>
+    <declare-styleable name="NetErrorBottom">
+        <attr name="neterrorbottom_image" format="integer"/>
+    </declare-styleable>
+    <declare-styleable name="ProductProgressBar">
+        <attr name="product_progressbarbackgroup" format="color"/>
+        <attr name="product_progressbarortextcolor" format="color"/>
+        <attr name="product_progressbarradius" format="dimension"/>
+        <attr name="product_progressbarheight" format="dimension"/>
+    </declare-styleable>
+</resources>
