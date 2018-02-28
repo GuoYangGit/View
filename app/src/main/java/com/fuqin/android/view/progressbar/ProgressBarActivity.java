@@ -14,6 +14,10 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.fuqin.android.view.R;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 public class ProgressBarActivity extends AppCompatActivity {
     private ProductProgressBar mProgressBar;
     private ProgressView mProgressView;
@@ -23,12 +27,17 @@ public class ProgressBarActivity extends AppCompatActivity {
     private LinearLayout mLoadingLayout;
     private LinearLayout mLoadFailLayout;
     private Button mLoadFailButton;
+    private List<FallBean> mFallBeanList;
+    private Random mRandom = new Random();
+    private FallBean[] mFallBeans = {new FallBean(0, "bom"), new FallBean(1, "+1000")
+            , new FallBean(2, "+0.5%"), new FallBean(3, "爱奇艺VIP")};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_progress_bar);
         initView();
+        initData();
         mProgressView.setProgress(100);
         mProgressView.setProgressListener(currentProgress -> {
             if (currentProgress == 100) {
@@ -36,7 +45,7 @@ public class ProgressBarActivity extends AppCompatActivity {
                 mDownTimeLayout.startAnimation(0);
                 mDownTimeLayout.setAnimatorEndListener(() -> {
                     mProgressBar.setProgress(100);
-                    mFallingLayout.start(50, 15000);
+                    mFallingLayout.start(50, 15000, mFallBeanList);
                 });
             }
         });
@@ -45,6 +54,13 @@ public class ProgressBarActivity extends AppCompatActivity {
             mLoadingLayout.setVisibility(View.GONE);
             mLoadFailLayout.setVisibility(View.VISIBLE);
         }, 3000);
+    }
+
+    private void initData() {
+        mFallBeanList = new ArrayList<>();
+        for (int i = 0; i < 50; i++) {
+            mFallBeanList.add(mFallBeans[mRandom.nextInt(3)]);
+        }
     }
 
     private void initView() {

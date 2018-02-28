@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Message;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 /**
  * Created by guoyang on 2018/1/26.
@@ -16,6 +17,8 @@ public class FallingHandler extends Handler {
     WeakReference<FallingLayout> mFallingLayout;
     private int totalNum;
     private long delayTime;
+    private List<FallBean> fallList;
+    private int index = 0;
     private FallingThread mFallingThread;
 
     FallingHandler(FallingLayout fallingLayout) {
@@ -30,14 +33,16 @@ public class FallingHandler extends Handler {
         }
         switch (paramMessage.what) {
             case 0:
-                localFallingLayout.addFallingBody();
+                localFallingLayout.addFallingBody(fallList.get(index));
+                index++;
                 break;
         }
     }
 
-    void addTask(int totalNum, long delayTime) {
+    void addTask(int totalNum, long delayTime, List<FallBean> fallList) {
         this.totalNum = totalNum;
         this.delayTime = delayTime;
+        this.fallList = fallList;
     }
 
     class FallingThread implements Runnable {

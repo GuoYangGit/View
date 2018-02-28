@@ -8,12 +8,16 @@ import android.graphics.Color;
 import android.graphics.Path;
 import android.graphics.PathMeasure;
 import android.util.AttributeSet;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.fuqin.android.view.R;
 
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -24,8 +28,8 @@ import java.util.Random;
 
 public class FallingLayout extends RelativeLayout {
     private int drawableId = R.mipmap.money; //红包的imgResId
-    private int[] bombImgId = {R.mipmap.bong0001, R.mipmap.bong0002, R.mipmap.bong0003
-            , R.mipmap.bong0004, R.mipmap.bong0005, R.mipmap.bong0006, R.mipmap.bong0007, R.mipmap.bong0008
+    private int[] bombImgId = {R.mipmap.bong0001, R.mipmap.bong0002, R.mipmap.bong0003, R.mipmap.bong0004
+            , R.mipmap.bong0005, R.mipmap.bong0006, R.mipmap.bong0007, R.mipmap.bong0008
             , R.mipmap.bong0009, R.mipmap.bong0010, R.mipmap.bong0011}; //炸弹的imgResId
     private FallingHandler mFallingHandler; //添加红包的handler
     private int mHeight, mWidth;
@@ -33,6 +37,7 @@ public class FallingLayout extends RelativeLayout {
     private long imgDuration = 2500; //红包下落时间
     private float imgRotation = 30; //红包倾斜角度
     private float imgScale = 0.5f; //红包的缩放大小
+
 
     public FallingLayout(Context paramContext) {
         this(paramContext, null);
@@ -46,7 +51,7 @@ public class FallingLayout extends RelativeLayout {
         super(paramContext, paramAttributeSet, paramInt);
     }
 
-    public void addFallingBody() {
+    public void addFallingBody(FallBean fallBean) {
         ImageView imageView = new ImageView(getContext());
         addView(imageView);
         imageView.setImageResource(drawableId);
@@ -60,37 +65,52 @@ public class FallingLayout extends RelativeLayout {
             valueAnimator.cancel();
             float x = imageView.getX();
             float y = imageView.getY();
-            showRewardView(x, y);
-//            if (random.nextInt(2) == 1) {
-//                showBombView(x, y);
-//            } else {
-//                showRewardView(x, y);
-//            }
+            switch (fallBean.getStatus()) {
+                case 0:
+                    showBombView(x, y);
+                    break;
+                case 1:
+                    showRewardView(x, y, fallBean.getMessage(), R.mipmap.gold);
+                    break;
+                case 2:
+                    showRewardView(x, y, fallBean.getMessage(), R.mipmap.coupons);
+                    break;
+                case 3:
+                    showRewardView(x, y, fallBean.getMessage(), R.mipmap.vip);
+                    break;
+            }
         });
     }
 
-    private void showRewardView(float x, float y) {
+    private void showRewardView(float x, float y, String message, int resId) {
+        LinearLayout linearLayout = new LinearLayout(getContext());
+        linearLayout.setGravity(Gravity.CENTER_VERTICAL);
+        linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+        linearLayout.setX(x);
         TextView textView = new TextView(getContext());
-        addView(textView);
-        textView.setTextSize(18);
+        textView.setTextSize(16);
         textView.setTextColor(Color.YELLOW);
-        textView.setText("+666");
-        textView.setX(x);
-        showRewardAnimation(textView, y);
+        textView.setText(message);
+        ImageView imageView = new ImageView(getContext());
+        imageView.setImageResource(resId);
+        addView(linearLayout);
+        linearLayout.addView(textView);
+        linearLayout.addView(imageView);
+        showRewardAnimation(linearLayout, y);
     }
 
-    private void showRewardAnimation(TextView textView, float y) {
+    private void showRewardAnimation(LinearLayout linearLayout, float y) {
         ValueAnimator valueAnimator = ValueAnimator.ofFloat(0.5f, 1);
         valueAnimator.setDuration(2000);
         valueAnimator.addUpdateListener(animation -> {
             float value = (float) animation.getAnimatedValue();
-            textView.setAlpha(value);
-            textView.setY(y - mHeight / 10 * value);
+            linearLayout.setAlpha(value);
+            linearLayout.setY(y - mHeight / 10 * value);
         });
         valueAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                removeView(textView);
+                removeView(linearLayout);
             }
         });
         valueAnimator.start();
@@ -154,12 +174,12 @@ public class FallingLayout extends RelativeLayout {
         return valueAnimator;
     }
 
-    public void start(int totalNum, long totalTime) {
+    public void start(int totalNum, long totalTime, List<FallBean> fallList) {
         if (totalNum == 0 || mFallingHandler != null) {
             return;
         }
         mFallingHandler = new FallingHandler(this);
-        mFallingHandler.addTask(totalNum, (totalTime - imgDuration) / totalNum);
+        mFallingHandler.addTask(totalNum, (totalTime - imgDuration) / totalNum, fallList);
         mFallingHandler.onStart();
     }
 
@@ -174,5 +194,15 @@ public class FallingLayout extends RelativeLayout {
         super.onMeasure(paramInt1, paramInt2);
         mWidth = getMeasuredWidth();
         mHeight = getMeasuredHeight();
+    }
+
+    /**
+     * dp 2 px
+     *
+     * @param dpVal
+     */
+    protected int dp2px(int dpVal) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                dpVal, getResources().getDisplayMetrics());
     }
 }
